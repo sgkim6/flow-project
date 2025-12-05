@@ -1,11 +1,13 @@
 package com.example.flow.domain.controller;
 
+import com.example.flow.domain.dto.BlockedExtensionListResponse;
 import com.example.flow.domain.dto.BlockedExtensionRequest;
 import com.example.flow.domain.entity.BlockedExtension;
 import com.example.flow.domain.service.BlockedExtensionService;
 import com.example.flow.global.dto.ApiResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +24,10 @@ public class BlockedExtensionController {
     public ApiResult<BlockedExtension> create(@Valid @RequestBody BlockedExtensionRequest request) {
         BlockedExtension saved = blockedExtensionService.create(request);
         return ApiResult.succeed(saved, "차단 확장자를 추가했습니다.");
+    }
+
+    @GetMapping
+    public ApiResult<BlockedExtensionListResponse> getExtensions() {
+        return ApiResult.succeed(blockedExtensionService.getExtensionList(), "확장자 목록을 조회했습니다.");
     }
 }
