@@ -1,10 +1,13 @@
 package com.example.flow.domain.service;
 
 import com.example.flow.domain.dto.BlockedExtensionRequest;
+import com.example.flow.domain.dto.BlockedExtensionListResponse;
+import com.example.flow.domain.dto.PinnedExtensionInfo;
 import com.example.flow.domain.entity.BlockedExtension;
 import com.example.flow.domain.repository.BlockedExtensionRepository;
 import com.example.flow.global.exception.BusinessException;
 import com.example.flow.global.exception.ErrorCode;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +24,9 @@ public class BlockedExtensionService {
         String name = request.getName();
 
         // - 예외처리 루틴 시작
-        if(isPinnedExtension(name))
+        if (!isPinnedExtension(name)) {
             validateCountLimit(); // 갯수 체크
+        }
         validateExtensionName(name); // 이름 유효성 쳌
         validateLength(name); // 이름 길이 체크
         validateDuplicate(name); // 중복검사
@@ -40,6 +44,20 @@ public class BlockedExtensionService {
                                 .pinned(false)
                                 .build()
                 ));
+    }
+
+    public BlockedExtensionListResponse getExtensionList() {
+        List<PinnedExtensionInfo> pinnedExtensions = blockedExtensionRepository.findAllByPinnedTrue()
+                .stream()
+                .map(extension -> new PinnedExtensionInfo(extension.getName(), extension.isValid()))
+                .toList();
+
+        List<String> customExtensions = blockedExtensionRepository.findAllByPinnedFalseAndIsValidTrue()
+                .stream()
+                .map(BlockedExtension::getName)
+                .toList();
+
+        return new BlockedExtensionListResponse(pinnedExtensions, customExtensions);
     }
 
     private void validateExtensionName(String name) {
