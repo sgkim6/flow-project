@@ -47,12 +47,12 @@ public class BlockedExtensionService {
     }
 
     public BlockedExtensionListResponse getExtensionList() {
-        List<PinnedExtensionInfo> pinnedExtensions = blockedExtensionRepository.findAllByPinnedTrue()
+        List<PinnedExtensionInfo> pinnedExtensions = blockedExtensionRepository.findAllByPinnedTrueOrderByIdAsc()
                 .stream()
                 .map(extension -> new PinnedExtensionInfo(extension.getName(), extension.isValid()))
                 .toList();
 
-        List<String> customExtensions = blockedExtensionRepository.findAllByPinnedFalseAndIsValidTrue()
+        List<String> customExtensions = blockedExtensionRepository.findAllByPinnedFalseAndIsValidTrueOrderByNameAsc()
                 .stream()
                 .map(BlockedExtension::getName)
                 .toList();

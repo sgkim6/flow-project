@@ -10,6 +10,6 @@ public interface BlockedExtensionRepository extends JpaRepository<BlockedExtensi
     Optional<BlockedExtension> findByName(String name);
     Optional<BlockedExtension> findByNameAndIsValidTrue(String name);
     long countByPinnedFalseAndIsValidTrue();
-    List<BlockedExtension> findAllByPinnedTrue();
-    List<BlockedExtension> findAllByPinnedFalseAndIsValidTrue();
+    List<BlockedExtension> findAllByPinnedTrueOrderByIdAsc();
+    List<BlockedExtension> findAllByPinnedFalseAndIsValidTrueOrderByNameAsc();
 }
