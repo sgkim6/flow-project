@@ -18,19 +18,28 @@ public class BlockedExtensionService {
 
     @Transactional
     public BlockedExtension create(BlockedExtensionRequest request) {
+        String name = request.getName();
 
         // - 예외처리 루틴 시작
-        validateCountLimit(); // 갯수 체크
-        validateExtensionName(request.getName()); // 이름 유효성 쳌
-        validateLength(request.getName()); // 이름 길이 체크
-        validateDuplicate(request.getName()); // 중복검사
+        if(isPinnedExtension(name))
+            validateCountLimit(); // 갯수 체크
+        validateExtensionName(name); // 이름 유효성 쳌
+        validateLength(name); // 이름 길이 체크
+        validateDuplicate(name); // 중복검사
         // - 루틴 끝
 
-        BlockedExtension blockedExtension = BlockedExtension.builder()
-                .name(request.getName())
-                .pinned(false)
-                .build();
-        return blockedExtensionRepository.save(blockedExtension);
+        return blockedExtensionRepository.findByName(name)
+                .filter(blockedExtension -> !blockedExtension.isValid())
+                .map(blockedExtension -> {
+                    blockedExtension.restore();
+                    return blockedExtensionRepository.save(blockedExtension);
+                })
+                .orElseGet(() -> blockedExtensionRepository.save(
+                        BlockedExtension.builder()
+                                .name(name)
+                                .pinned(false)
+                                .build()
+                ));
     }
 
     private void validateExtensionName(String name) {
@@ -47,18 +56,27 @@ public class BlockedExtensionService {
 
     private void validateDuplicate(String name) {
         blockedExtensionRepository.findByName(name)
+                .filter(BlockedExtension::isPinned)
                 .ifPresent(blockedExtension -> {
-                    if (blockedExtension.isPinned()) {
-                        throw new BusinessException(ErrorCode.PINNED_EXTENSION_ALREADY_EXISTS);
-                    }
+                    throw new BusinessException(ErrorCode.PINNED_EXTENSION_ALREADY_EXISTS);
+                });
+
+        blockedExtensionRepository.findByNameAndIsValidTrue(name)
+                .ifPresent(blockedExtension -> {
                     throw new BusinessException(ErrorCode.EXTENSION_ALREADY_EXISTS);
                 });
     }
 
     private void validateCountLimit() {
-        long count = blockedExtensionRepository.countByPinnedFalse();
+        long count = blockedExtensionRepository.countByPinnedFalseAndIsValidTrue();
         if (count >= 200) {
             throw new BusinessException(ErrorCode.EXTENSION_LIMIT_EXCEEDED);
         }
+    }
+
+    public boolean isPinnedExtension(String name) {
+        return blockedExtensionRepository.findByName(name)
+                .map(BlockedExtension::isPinned)
+                .orElse(false);
     }
 }
