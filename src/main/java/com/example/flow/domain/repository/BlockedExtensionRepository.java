@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface BlockedExtensionRepository extends JpaRepository<BlockedExtension, Long> {
     Optional<BlockedExtension> findByName(String name);
+    long countByPinnedFalse();
 }

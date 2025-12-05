@@ -18,9 +18,14 @@ public class BlockedExtensionService {
 
     @Transactional
     public BlockedExtension create(BlockedExtensionRequest request) {
-        validateExtensionName(request.getName());
-        validateLength(request.getName());
-        validateDuplicate(request.getName());
+
+        // - 예외처리 루틴 시작
+        validateCountLimit(); // 갯수 체크
+        validateExtensionName(request.getName()); // 이름 유효성 쳌
+        validateLength(request.getName()); // 이름 길이 체크
+        validateDuplicate(request.getName()); // 중복검사
+        // - 루틴 끝
+
         BlockedExtension blockedExtension = BlockedExtension.builder()
                 .name(request.getName())
                 .pinned(false)
@@ -48,5 +53,12 @@ public class BlockedExtensionService {
                     }
                     throw new BusinessException(ErrorCode.EXTENSION_ALREADY_EXISTS);
                 });
+    }
+
+    private void validateCountLimit() {
+        long count = blockedExtensionRepository.countByPinnedFalse();
+        if (count >= 200) {
+            throw new BusinessException(ErrorCode.EXTENSION_LIMIT_EXCEEDED);
+        }
     }
 }
