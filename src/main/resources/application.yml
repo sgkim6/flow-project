@@ -3,3 +3,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/flowdb
     username: pick
     password: 1155
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
