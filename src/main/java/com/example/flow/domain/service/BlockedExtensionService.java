@@ -60,6 +60,13 @@ public class BlockedExtensionService {
         return new BlockedExtensionListResponse(pinnedExtensions, customExtensions);
     }
 
+    @Transactional
+    public void delete(String name) {
+        BlockedExtension extension = blockedExtensionRepository.findByNameAndIsValidTrue(name)
+                .orElseThrow(() -> new BusinessException(ErrorCode.EXTENSION_NOT_FOUND));
+        extension.delete();
+    }
+
     private void validateExtensionName(String name) {
         if (!name.matches("^[A-Za-z0-9]+$")) {
             throw new BusinessException(ErrorCode.INVALID_EXTENSION);
