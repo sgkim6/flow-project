@@ -30,4 +30,8 @@ public abstract class BaseEntity {
     public void delete() {
         this.isValid = false;
     }
+
+    public void restore() {
+        this.isValid = true;
+    }
 }
