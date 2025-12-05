@@ -25,8 +25,12 @@ public class BlockedExtension extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
+    @Column(name = "is_pinned", nullable = false)
+    private boolean pinned = false;
+
     @Builder
-    public BlockedExtension(String name) {
+    public BlockedExtension(String name, boolean pinned) {
         this.name = name;
+        this.pinned = pinned;
     }
 }
