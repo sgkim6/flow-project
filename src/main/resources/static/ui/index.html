@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flow 확장자 관리</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app-shell">
+    <header>
+        <p class="eyebrow">longboard-festa admin 무드</p>
+        <h1>파일 확장자 차단 센터</h1>
+        <p class="subtitle">추천 확장자는 빠르게 토글하고, 커스텀 확장자를 자유롭게 관리하세요.</p>
+    </header>
+
+    <section class="card">
+        <div class="card-head">
+            <h2>추천 확장자</h2>
+            <span class="hint">체크하면 즉시 차단 상태가 반영됩니다.</span>
+        </div>
+        <div id="pinned-list" class="pinned-list"></div>
+    </section>
+
+    <section class="card">
+        <div class="card-head">
+            <h2>커스텀 확장자</h2>
+        </div>
+        <form id="custom-form" class="custom-form">
+            <input type="text" id="custom-input" maxlength="20" placeholder="예) zip" autocomplete="off" />
+            <button type="submit">추가</button>
+        </form>
+        <div id="custom-empty" class="empty">아직 추가된 확장자가 없습니다.</div>
+        <ul id="custom-list" class="custom-list"></ul>
+    </section>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="main.js"></script>
+</body>
+</html>
