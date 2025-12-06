@@ -2,6 +2,7 @@ package com.example.flow.domain.service;
 
 import com.example.flow.domain.dto.BlockedExtensionRequest;
 import com.example.flow.domain.dto.BlockedExtensionListResponse;
+import com.example.flow.domain.dto.FileValidationRequest;
 import com.example.flow.domain.dto.PinnedExtensionInfo;
 import com.example.flow.domain.entity.BlockedExtension;
 import com.example.flow.domain.repository.BlockedExtensionRepository;
@@ -112,8 +113,8 @@ public class BlockedExtensionService {
     }
 
     @Transactional
-    public void validateFilename(String fileName) {
-        String extension = extractExtension(fileName);
+    public void validateFileName(FileValidationRequest request) {
+        String extension = extractExtension(request.getFileName());
         blockedExtensionRepository.findByNameAndIsValidTrue(extension)
                 .ifPresent(blockedExtension -> {
                     throw new BusinessException(ErrorCode.EXTENSION_BLOCKED);
