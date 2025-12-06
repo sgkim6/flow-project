@@ -100,8 +100,6 @@ public class BlockedExtensionService {
     }
 
     public boolean isPinnedExtension(String name) {
-        return blockedExtensionRepository.findByName(name)
-                .map(BlockedExtension::isPinned)
-                .orElse(false);
+        return blockedExtensionRepository.existsByNameAndPinnedTrue(name);
     }
 }
