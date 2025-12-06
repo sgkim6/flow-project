@@ -35,10 +35,5 @@ out/
 
 ### VS Code ###
 .vscode/
-build.gradle
-gradlew
-gradlew.bat
-.gitattributes
-.idea/
 # Production config
 application-prod.yml
