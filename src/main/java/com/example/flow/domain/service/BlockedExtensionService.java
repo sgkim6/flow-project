@@ -60,7 +60,9 @@ public class BlockedExtensionService {
                 .map(BlockedExtension::getName)
                 .toList();
 
-        return new BlockedExtensionListResponse(pinnedExtensions, customExtensions);
+        long customCount = blockedExtensionRepository.countByPinnedFalseAndIsValidTrue();
+
+        return new BlockedExtensionListResponse(pinnedExtensions, customExtensions, customCount, CUSTOM_EXTENSION_LIMIT);
     }
 
     @Transactional

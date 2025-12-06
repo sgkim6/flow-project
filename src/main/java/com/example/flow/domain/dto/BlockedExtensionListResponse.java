@@ -9,4 +9,6 @@ import lombok.Getter;
 public class BlockedExtensionListResponse {
     private final List<PinnedExtensionInfo> pinnedExtensions;
     private final List<String> customExtensions;
+    private final long customCount;
+    private final int customLimit;
 }
