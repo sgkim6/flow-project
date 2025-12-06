@@ -41,7 +41,7 @@ const renderPinned = (items) => {
                 if (input.checked) {
                     await request(API_BASE, {
                         method: 'POST',
-                        body: JSON.stringify({ name }),
+                        body: JSON.stringify({ name, pinned: true }),
                     });
                     showToast(`${name} 차단을 활성화했습니다.`);
                 } else {
@@ -108,7 +108,7 @@ customForm.addEventListener('submit', async (event) => {
     try {
         await request(API_BASE, {
             method: 'POST',
-            body: JSON.stringify({ name }),
+            body: JSON.stringify({ name, pinned: false }),
         });
         customInput.value = '';
         showToast(`${name}을(를) 추가했습니다.`);
