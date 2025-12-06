@@ -6,6 +6,7 @@ const customListEl = document.getElementById('custom-list');
 const customEmptyEl = document.getElementById('custom-empty');
 const customCountEl = document.getElementById('custom-count');
 const toastEl = document.getElementById('toast');
+const spinnerEl = document.getElementById('spinner');
 
 const showToast = (message) => {
     toastEl.textContent = message;
@@ -14,17 +15,22 @@ const showToast = (message) => {
 };
 
 const request = async (url, options = {}) => {
-    const res = await fetch(url, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        ...options,
-    });
-    if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.msg || '요청이 실패했습니다.');
+    spinnerEl?.classList.add('show');
+    try {
+        const res = await fetch(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            ...options,
+        });
+        if (!res.ok) {
+            const body = await res.json().catch(() => ({}));
+            throw new Error(body.msg || '요청이 실패했습니다.');
+        }
+        return await res.json();
+    } finally {
+        spinnerEl?.classList.remove('show');
     }
-    return res.json();
 };
 
 const renderPinned = (items) => {
