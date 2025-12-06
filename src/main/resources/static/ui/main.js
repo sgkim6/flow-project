@@ -4,6 +4,7 @@ const customForm = document.getElementById('custom-form');
 const customInput = document.getElementById('custom-input');
 const customListEl = document.getElementById('custom-list');
 const customEmptyEl = document.getElementById('custom-empty');
+const customCountEl = document.getElementById('custom-count');
 const toastEl = document.getElementById('toast');
 
 const showToast = (message) => {
@@ -96,6 +97,10 @@ const fetchList = async () => {
     const { data } = await request(API_BASE);
     renderPinned(data.pinnedExtensions || []);
     renderCustom(data.customExtensions || []);
+    const count = data.customCount ?? (data.customExtensions?.length || 0);
+    if (customCountEl) {
+        customCountEl.textContent = `${count}/${data.customLimit ?? '∞'}`;
+    }
 };
 
 customForm.addEventListener('submit', async (event) => {
