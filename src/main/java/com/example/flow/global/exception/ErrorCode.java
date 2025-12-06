@@ -9,8 +9,8 @@ public enum ErrorCode {
     PINNED_EXTENSION_ALREADY_EXISTS(HttpStatus.CONFLICT, "E002", "이미 고정 확장자 리스트에 존재하는 확장자입니다."),
     EXTENSION_ALREADY_EXISTS(HttpStatus.CONFLICT, "E003", "이미 추가된 확장자입니다."),
     EXTENSION_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, "E004", "확장자는 20자를 초과할 수 없습니다."),
-    EXTENSION_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "E005", "확장자는 최대 300개까지만 등록할 수 있습니다."),
-    EXTENSION_NOT_FOUND(HttpStatus.NOT_FOUND, "E006", "확장자를 찾을 수 없습니다."),
+    EXTENSION_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "E005", "확장자는 최대 200개까지만 등록할 수 있습니다."),
+    EXTENSION_NOT_FOUND(HttpStatus.NOT_FOUND, "E006", "확장자를 찾을 수 없습니다."), // 삭제 시 예외처리용
     ;
 
     private final HttpStatus status;
