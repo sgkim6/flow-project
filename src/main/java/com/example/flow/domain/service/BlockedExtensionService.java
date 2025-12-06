@@ -87,10 +87,8 @@ public class BlockedExtensionService {
     private void validateDuplicate(String name, boolean isPinned) {
         blockedExtensionRepository.findByName(name)
                 .ifPresent(existing -> {
-                    if (existing.isPinned()) {
-                        if (!isPinned) {
-                            throw new BusinessException(ErrorCode.PINNED_EXTENSION_ALREADY_EXISTS);
-                        }
+                    if (existing.isPinned() && !isPinned) {
+                        throw new BusinessException(ErrorCode.PINNED_EXTENSION_ALREADY_EXISTS);
                     } else if (existing.isValid()) {
                         throw new BusinessException(ErrorCode.EXTENSION_ALREADY_EXISTS);
                     }
@@ -111,5 +109,14 @@ public class BlockedExtensionService {
     public String extractExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf('.');
         return fileName.substring(dotIndex + 1);
+    }
+
+    @Transactional
+    public void validateFilename(String fileName) {
+        String extension = extractExtension(fileName);
+        blockedExtensionRepository.findByNameAndIsValidTrue(extension)
+                .ifPresent(blockedExtension -> {
+                    throw new BusinessException(ErrorCode.EXTENSION_BLOCKED);
+                });
     }
 }
