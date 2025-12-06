@@ -22,14 +22,15 @@ public class BlockedExtensionService {
     @Transactional
     public BlockedExtension create(BlockedExtensionRequest request) {
         String name = request.getName();
+        boolean pinned = request.isPinned();
 
         // - 예외처리 루틴 시작
-        if (!isPinnedExtension(name)) {
+        if (!pinned) {
             validateCountLimit(); // 갯수 체크
         }
         validateExtensionName(name); // 이름 유효성 쳌
         validateLength(name); // 이름 길이 체크
-        validateDuplicate(name); // 중복검사
+        validateDuplicate(name, pinned); // 중복검사
         // - 루틴 끝
 
         return blockedExtensionRepository.findByName(name)
@@ -41,7 +42,7 @@ public class BlockedExtensionService {
                 .orElseGet(() -> blockedExtensionRepository.save(
                         BlockedExtension.builder()
                                 .name(name)
-                                .pinned(false)
+                                .pinned(pinned)
                                 .build()
                 ));
     }
@@ -79,16 +80,16 @@ public class BlockedExtensionService {
         }
     }
 
-    private void validateDuplicate(String name) {
+    private void validateDuplicate(String name, boolean isPinned) {
         blockedExtensionRepository.findByName(name)
-                .filter(BlockedExtension::isPinned)
-                .ifPresent(blockedExtension -> {
-                    throw new BusinessException(ErrorCode.PINNED_EXTENSION_ALREADY_EXISTS);
-                });
-
-        blockedExtensionRepository.findByNameAndIsValidTrue(name)
-                .ifPresent(blockedExtension -> {
-                    throw new BusinessException(ErrorCode.EXTENSION_ALREADY_EXISTS);
+                .ifPresent(existing -> {
+                    if (existing.isPinned()) {
+                        if (!isPinned) {
+                            throw new BusinessException(ErrorCode.PINNED_EXTENSION_ALREADY_EXISTS);
+                        }
+                    } else if (existing.isValid()) {
+                        throw new BusinessException(ErrorCode.EXTENSION_ALREADY_EXISTS);
+                    }
                 });
     }
 
