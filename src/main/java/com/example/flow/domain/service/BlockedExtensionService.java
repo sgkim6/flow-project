@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class BlockedExtensionService {
 
+    private static final int CUSTOM_EXTENSION_LIMIT = 200;
+
     private final BlockedExtensionRepository blockedExtensionRepository;
 
     @Transactional
@@ -95,7 +97,7 @@ public class BlockedExtensionService {
 
     private void validateCountLimit() {
         long count = blockedExtensionRepository.countByPinnedFalseAndIsValidTrue();
-        if (count >= 200) {
+        if (count >= CUSTOM_EXTENSION_LIMIT) {
             throw new BusinessException(ErrorCode.EXTENSION_LIMIT_EXCEEDED);
         }
     }
