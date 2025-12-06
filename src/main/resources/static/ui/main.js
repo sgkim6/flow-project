@@ -4,6 +4,7 @@ const customForm = document.getElementById('custom-form');
 const customInput = document.getElementById('custom-input');
 const customListEl = document.getElementById('custom-list');
 const customEmptyEl = document.getElementById('custom-empty');
+const customCountEl = document.getElementById('custom-count');
 const toastEl = document.getElementById('toast');
 
 const showToast = (message) => {
@@ -41,7 +42,7 @@ const renderPinned = (items) => {
                 if (input.checked) {
                     await request(API_BASE, {
                         method: 'POST',
-                        body: JSON.stringify({ name }),
+                        body: JSON.stringify({ name, pinned: true }),
                     });
                     showToast(`${name} 차단을 활성화했습니다.`);
                 } else {
@@ -96,6 +97,10 @@ const fetchList = async () => {
     const { data } = await request(API_BASE);
     renderPinned(data.pinnedExtensions || []);
     renderCustom(data.customExtensions || []);
+    const count = data.customCount ?? (data.customExtensions?.length || 0);
+    if (customCountEl) {
+        customCountEl.textContent = `${count}/${data.customLimit ?? '∞'}`;
+    }
 };
 
 customForm.addEventListener('submit', async (event) => {
@@ -108,7 +113,7 @@ customForm.addEventListener('submit', async (event) => {
     try {
         await request(API_BASE, {
             method: 'POST',
-            body: JSON.stringify({ name }),
+            body: JSON.stringify({ name, pinned: false }),
         });
         customInput.value = '';
         showToast(`${name}을(를) 추가했습니다.`);

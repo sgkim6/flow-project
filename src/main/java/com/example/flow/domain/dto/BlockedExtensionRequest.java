@@ -14,4 +14,6 @@ public class BlockedExtensionRequest {
 
     @NotBlank
     private String name;
+
+    private boolean pinned;
 }
