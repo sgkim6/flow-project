@@ -40,3 +40,5 @@ gradlew
 gradlew.bat
 .gitattributes
 .idea/
+# Production config
+application-prod.yml
