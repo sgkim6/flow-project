@@ -107,4 +107,9 @@ public class BlockedExtensionService {
     public boolean isPinnedExtension(String name) {
         return blockedExtensionRepository.existsByNameAndPinnedTrue(name);
     }
+
+    public String extractExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        return fileName.substring(dotIndex + 1);
+    }
 }
