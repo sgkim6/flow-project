@@ -24,7 +24,7 @@ public class BlockedExtensionService {
 
     @Transactional
     public BlockedExtension create(BlockedExtensionRequest request) {
-        String name = request.getName();
+        String name = request.getName().toLowerCase();
         boolean pinned = request.isPinned();
 
         // - 예외처리 루틴 시작
@@ -113,8 +113,8 @@ public class BlockedExtensionService {
     }
 
     @Transactional
-    public void validateFileName(FileValidationRequest request) {
-        String extension = extractExtension(request.getFileName());
+    public void validateUploadable(FileValidationRequest request) {
+        String extension = extractExtension(request.getFileName()).toLowerCase();
         blockedExtensionRepository.findByNameAndIsValidTrue(extension)
                 .ifPresent(blockedExtension -> {
                     throw new BusinessException(ErrorCode.EXTENSION_BLOCKED);
