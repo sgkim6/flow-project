@@ -113,7 +113,7 @@ public class BlockedExtensionService {
     }
 
     @Transactional
-    public void validateUploadable(FileValidationRequest request) {
+    public void validateFileName(FileValidationRequest request) {
         String extension = extractExtension(request.getFileName()).toLowerCase();
         blockedExtensionRepository.findByNameAndIsValidTrue(extension)
                 .ifPresent(blockedExtension -> {
