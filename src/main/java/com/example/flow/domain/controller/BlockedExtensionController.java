@@ -2,6 +2,7 @@ package com.example.flow.domain.controller;
 
 import com.example.flow.domain.dto.BlockedExtensionListResponse;
 import com.example.flow.domain.dto.BlockedExtensionRequest;
+import com.example.flow.domain.dto.FileValidationRequest;
 import com.example.flow.domain.entity.BlockedExtension;
 import com.example.flow.domain.service.BlockedExtensionService;
 import com.example.flow.global.dto.ApiResult;
@@ -37,5 +38,11 @@ public class BlockedExtensionController {
     public ApiResult<Void> delete(@PathVariable String name) {
         blockedExtensionService.delete(name);
         return ApiResult.succeed(null, "확장자를 삭제했습니다.");
+    }
+
+    @PostMapping("/validate")
+    public ApiResult<Void> validateFile(@Valid @RequestBody FileValidationRequest request) {
+        blockedExtensionService.validateFileName(request);
+        return ApiResult.succeed(null, "업로드 완료!.");
     }
 }

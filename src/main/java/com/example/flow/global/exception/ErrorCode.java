@@ -11,6 +11,7 @@ public enum ErrorCode {
     EXTENSION_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, "E004", "확장자는 20자를 초과할 수 없습니다."),
     EXTENSION_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "E005", "확장자는 최대 200개까지만 등록할 수 있습니다."),
     EXTENSION_NOT_FOUND(HttpStatus.NOT_FOUND, "E006", "확장자를 찾을 수 없습니다."), // 삭제 시 예외처리용
+    EXTENSION_BLOCKED(HttpStatus.BAD_REQUEST, "E007", "업로드가 차단된 확장자입니다."),
     ;
 
     private final HttpStatus status;

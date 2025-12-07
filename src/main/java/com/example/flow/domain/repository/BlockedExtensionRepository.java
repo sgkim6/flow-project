@@ -13,4 +13,5 @@ public interface BlockedExtensionRepository extends JpaRepository<BlockedExtensi
     long countByPinnedFalseAndIsValidTrue();
     List<BlockedExtension> findAllByPinnedTrueOrderByIdAsc();
     List<BlockedExtension> findAllByPinnedFalseAndIsValidTrueOrderByNameAsc();
+    List<BlockedExtension> findAllByIsValidTrue();
 }

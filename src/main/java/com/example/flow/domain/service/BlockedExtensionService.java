@@ -2,6 +2,7 @@ package com.example.flow.domain.service;
 
 import com.example.flow.domain.dto.BlockedExtensionRequest;
 import com.example.flow.domain.dto.BlockedExtensionListResponse;
+import com.example.flow.domain.dto.FileValidationRequest;
 import com.example.flow.domain.dto.PinnedExtensionInfo;
 import com.example.flow.domain.entity.BlockedExtension;
 import com.example.flow.domain.repository.BlockedExtensionRepository;
@@ -87,10 +88,8 @@ public class BlockedExtensionService {
     private void validateDuplicate(String name, boolean isPinned) {
         blockedExtensionRepository.findByName(name)
                 .ifPresent(existing -> {
-                    if (existing.isPinned()) {
-                        if (!isPinned) {
-                            throw new BusinessException(ErrorCode.PINNED_EXTENSION_ALREADY_EXISTS);
-                        }
+                    if (existing.isPinned() && !isPinned) {
+                        throw new BusinessException(ErrorCode.PINNED_EXTENSION_ALREADY_EXISTS);
                     } else if (existing.isValid()) {
                         throw new BusinessException(ErrorCode.EXTENSION_ALREADY_EXISTS);
                     }
@@ -106,5 +105,19 @@ public class BlockedExtensionService {
 
     public boolean isPinnedExtension(String name) {
         return blockedExtensionRepository.existsByNameAndPinnedTrue(name);
+    }
+
+    public String extractExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        return fileName.substring(dotIndex + 1);
+    }
+
+    @Transactional
+    public void validateFileName(FileValidationRequest request) {
+        String extension = extractExtension(request.getFileName());
+        blockedExtensionRepository.findByNameAndIsValidTrue(extension)
+                .ifPresent(blockedExtension -> {
+                    throw new BusinessException(ErrorCode.EXTENSION_BLOCKED);
+                });
     }
 }
