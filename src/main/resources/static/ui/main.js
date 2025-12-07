@@ -5,6 +5,9 @@ const customInput = document.getElementById('custom-input');
 const customListEl = document.getElementById('custom-list');
 const customEmptyEl = document.getElementById('custom-empty');
 const customCountEl = document.getElementById('custom-count');
+const validateForm = document.getElementById('validate-form');
+const validateInput = document.getElementById('validate-input');
+const validateResult = document.getElementById('validate-result');
 const toastEl = document.getElementById('toast');
 const spinnerEl = document.getElementById('spinner');
 
@@ -126,6 +129,24 @@ customForm.addEventListener('submit', async (event) => {
         await fetchList();
     } catch (err) {
         showToast(err.message);
+    }
+});
+
+validateForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const fileName = validateInput.value.trim();
+    if (!fileName) {
+        showToast('파일명을 입력하세요.');
+        return;
+    }
+    try {
+        await request(`${API_BASE}/validate`, {
+            method: 'POST',
+            body: JSON.stringify({ fileName }),
+        });
+        validateResult.textContent = `${fileName} 은(는) 업로드 가능합니다.`;
+    } catch (err) {
+        validateResult.textContent = err.message;
     }
 });
 
