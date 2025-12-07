@@ -4,6 +4,11 @@ spring:
     username: pick
     password: 1155
     driver-class-name: org.postgresql.Driver
+    hikari:
+      max-lifetime: 1800000
+      idle-timeout: 600000
+      validation-timeout: 5000
+      connection-test-query: SELECT 1
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -19,6 +24,11 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      max-lifetime: 1800000
+      idle-timeout: 600000
+      validation-timeout: 5000
+      connection-test-query: SELECT 1
   jpa:
     hibernate:
       ddl-auto: update
